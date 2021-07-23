@@ -1,8 +1,47 @@
-# Core2 for AWS IoT EduKit Arduino Basic Blinking LED Example
+# Core2 for AWS IoT EduKit Arduino Basic Connectivity Example
 
-This example provides a basic blinky example using the Arduino-style framework for Espressif MCU hardware on PlatformIO with the M5Stack Core2 ESP32 IoT Development Kit for AWS IoT EduKit (available on [Amazon.com](https://www.amazon.com/dp/B08VGRZYJR) or on the [M5Stack store](https://m5stack.com/products/m5stack-core2-esp32-iot-development-kit-for-aws-iot-edukit)). This example currently does not showcase AWS IoT connectivity or the use of the on-board secure element. It is meant to provide an example to get quickly get started.
+This is a basic AWS IoT connectivity example using the Arduino-style framework for Espressif MCU hardware on PlatformIO with the M5Stack Core2 ESP32 IoT Development Kit for AWS IoT EduKit (available on [Amazon.com](https://www.amazon.com/dp/B08VGRZYJR) or on the [M5Stack store](https://m5stack.com/products/m5stack-core2-esp32-iot-development-kit-for-aws-iot-edukit)). This example takes advantage of the on-board Microchip ATECC608 Trust&GO secure element that is pre-provisioned with a private key that can be used for connectivity to AWS IoT.
 
-PlatformIO will automatically pull the dependencies and toolchain. Use the following command from the PIO terminal window to compile and upload the code to the device:
+The AWS IoT EduKit program makes it easy to learn how to build end-to-end IoT applications using secure hardware, content, and code examples.
+
+The example provided connects to your Wi-Fi network, connects to AWS IoT Core, and publishes a simple message on the topic _<<DEVICE_SERIAL_NUMBER>>/_. With the device serial number being the unique serial number of the device, and also the MQTT client Id.
+
+## How to use this example
+To use this example, you will need to complete some of the steps in the AWS IoT EduKit program's tutorials (requires an [AWS account](https://portal.aws.amazon.com/billing/signup)):
+1) [Download and install Visual Studio Code (VSCode) and add the PlatformIO extension to VSCode](https://edukit.workshop.aws/en/getting-started/prerequisites.html). Select your OS and complete the entire page for your OS specific installation steps.
+
+2) [Create an IAM user with the necessary policy, download, install, and configure the AWS CLI](https://edukit.workshop.aws/en/blinky-hello-world/prerequisites.html). Complete the entire page.
+
+3) [Run the device provisioning script](https://edukit.workshop.aws/en/blinky-hello-world/device-provisioning.html). Complete the entire page, don't close the PlatformIO CLI terminal window. If you do, you can just re-run the script in another PlatformIO CLI terminal window.
+
+4) After running the device provisioning script, copy the device certificate and paste it into the **include/arduino_secrets.h** file to the THING_CERTIFICATE definition. You will see the device certificate below the **TNG Device Certificate:** section, after the serial number (with "sn" prefix) as in the image below:
+
+![Provisioning script screenshot with device certificate](certificate_ss.png)
+
+5) From within your PlatformIO CLI terminal window, change into the **Basic_Arduino** directory and then compile the device firmware, upload to the device, and monitor the serial output with the following commands:
 ```bash
-pio run -e core2foraws -t upload
+cd Basic_Arduino
+pio run -e core2foraws -t upload -t monitor
 ```
+
+6) After successful connection, the device will start publishing data to AWS IoT. You will see output in the serial monitor running in the PlatformIO CLI terminal window. Copy the topic from within the single quotes in the terminal window (e.g. 012345abcdefg/).
+
+![Topic filter output in the PlatformIO CLI terminal window](topic_ss.png)
+
+7) Visit the [AWS IoT MQTT test client](https://us-west-2.console.aws.amazon.com/iot/home?region=us-west-2#/test) and paste that topic in to the topic filter textbox in the MQTT test client. Click the **Subscribe** button and you should see the same messages in the AWS IoT MQTT test console.
+
+![Add topic filter to AWS IoT MQTT test console](test_console_ss.png)
+
+## Cleanup
+To save power and avoid any accidental AWS charges, we recommend that after you are done, you turn off the power on the device by holding the power button for 6 seconds or more to turn it off. Additionally, you can erase the flash memory to wipe out the application by running the following command from the PlatformIO CLI terminal window:
+```bash
+pio run -e core2foraws -t erase
+```
+
+Upon resetting the device after it's been wiped, it will emit a ticking sound from the speaker as the device reboots repeatedly. It's perfectly normal. The sound occurs from the power chip supplying power to the speaker amplifier and the MCU causing a reboot since there is no application to run. Uploading any firmware will stop the constant reboots.
+
+## Hardware API example
+For examples of how to use the hardware features without any connectivity, take a look at the repository from M5Stack: https://github.com/m5stack/M5Core2/tree/master/examples/core2_for_aws/FactoryTest
+
+## Third Party Library License Notice
+This software depends on ArduinoECCX08 and ArduinoMqttClient under LGPL-2.1. These are copy-left licenses. The libraries are not distributed within this software repository, they are imported in by the PlatformIO library manager.
