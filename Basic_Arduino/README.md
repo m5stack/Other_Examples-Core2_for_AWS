@@ -7,22 +7,19 @@ The AWS IoT EduKit program makes it easy to learn how to build end-to-end IoT ap
 The example provided connects to your Wi-Fi network, connects to AWS IoT Core, and publishes a simple message on the topic _<<DEVICE_SERIAL_NUMBER>>/_. With the device serial number being the unique serial number of the device, and also the MQTT client Id.
 
 ## How to use this example
-To use this example, you will need to complete some of the steps in the AWS IoT EduKit program's tutorials (requires an [AWS account](https://portal.aws.amazon.com/billing/signup)):
-1) [Download and install Visual Studio Code (VSCode) and add the PlatformIO extension to VSCode](https://edukit.workshop.aws/en/getting-started/prerequisites.html). Select your OS and complete the steps for your OS specific installation steps. Be sure to substitute opening this repository instead of the one in the tutorial.
+To use this example, you will need to complete the [Getting Started](https://edukit.workshop.aws/en/getting-started.html) and [Cloud Connected Blinky](https://edukit.workshop.aws/en/blinky-hello-world.html) tutorials first.
 
-2) Open the **include/arduino_secrets.h** file and enter your Wi-Fi credentials in between the quotes, replacing the default values. Make sure to connect to a 2.4GHz network since 5GHz is not supported by the hardware.
+1) Open a new VSCode window and clone/open this repository. Navigate to the **Basic_Arduino/include/arduino_secrets.h** file and enter your Wi-Fi credentials in between the quotes, replacing the default values. Make sure to put the SSID to a 2.4GHz network. 5GHz is not supported by the hardware.
 
-3) [Create an IAM user with the necessary policy, download, install, and configure the AWS CLI](https://edukit.workshop.aws/en/blinky-hello-world/prerequisites.html). Complete the entire page.
+2) Open the [PlatformIO CLI terminal window](https://edukit.workshop.aws/en/blinky-hello-world/prerequisites.html#open-the-platformio-cli-terminal-window) and retrieve your AWS IoT endpoint address with the AWS CLI using the code below. Copy and paste it into the **Basic_Arduino/include/arduino_secrets.h** file to define the **AWS_IOT_ENDPOINT_ADDRESS**.
+    
+    ```bash
+    aws iot describe-endpoint --endpoint-type iot:Data-ATS
+    ```
 
-4) Paste the just copied endpoint address into the **include/arduino_secrets.h** file for the AWS_IOT_ENDPOINT_ADDRESS definition.
-
-5) [Run the device provisioning script](https://edukit.workshop.aws/en/blinky-hello-world/device-provisioning.html). Complete the entire page, don't close the PlatformIO CLI terminal window. If you do, you can just re-run the script in another PlatformIO CLI terminal window.
-
-6) After running the device provisioning script, copy the device certificate and paste it into the **include/arduino_secrets.h** file to the THING_CERTIFICATE definition. You will see the device certificate below the **TNG Device Certificate:** section, after the serial number (with "sn" prefix) as in the image below:
-
-![Provisioning script screenshot with device certificate](certificate_ss.png)
-
-5) From within your PlatformIO CLI terminal window, change into the **Basic_Arduino** directory and then compile the device firmware, upload to the device, and monitor the serial output with the following commands:
+3) Open the file **Blinky-Hello-World/utilities/AWS_IoT_registration_helper/output_files/device_cert.pem** file. This file was created when you completed the Cloud Connected Blinky tutorial. Copy and paste the contents into the **Basic_Arduino/include/arduino_secrets.h** file to define the **THING_CERTIFICATE**.
+   
+4) From within your PlatformIO CLI terminal window, change into the **Basic_Arduino** directory and then compile the device firmware, upload to the device, and monitor the serial output with the following commands:
 ```bash
 cd Basic_Arduino
 pio run -e core2foraws -t upload -t monitor
