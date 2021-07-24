@@ -1,4 +1,4 @@
-# Core2 for AWS IoT EduKit Arduino Basic Connectivity Example
+# Basic AWS IoT Connectivity Arduino Example for the M5Stack Core2 for AWS IoT EduKit
 
 This is a basic AWS IoT connectivity example using the Arduino-style framework for Espressif MCU hardware on PlatformIO with the M5Stack Core2 ESP32 IoT Development Kit for AWS IoT EduKit (available on [Amazon.com](https://www.amazon.com/dp/B08VGRZYJR) or on the [M5Stack store](https://m5stack.com/products/m5stack-core2-esp32-iot-development-kit-for-aws-iot-edukit)). This example takes advantage of the on-board Microchip ATECC608 Trust&GO secure element that is pre-provisioned with a private key that can be used for connectivity to AWS IoT.
 
@@ -8,13 +8,17 @@ The example provided connects to your Wi-Fi network, connects to AWS IoT Core, a
 
 ## How to use this example
 To use this example, you will need to complete some of the steps in the AWS IoT EduKit program's tutorials (requires an [AWS account](https://portal.aws.amazon.com/billing/signup)):
-1) [Download and install Visual Studio Code (VSCode) and add the PlatformIO extension to VSCode](https://edukit.workshop.aws/en/getting-started/prerequisites.html). Select your OS and complete the entire page for your OS specific installation steps.
+1) [Download and install Visual Studio Code (VSCode) and add the PlatformIO extension to VSCode](https://edukit.workshop.aws/en/getting-started/prerequisites.html). Select your OS and complete the steps for your OS specific installation steps. Be sure to substitute opening this repository instead of the one in the tutorial.
 
-2) [Create an IAM user with the necessary policy, download, install, and configure the AWS CLI](https://edukit.workshop.aws/en/blinky-hello-world/prerequisites.html). Complete the entire page.
+2) Open the **include/arduino_secrets.h** file and enter your Wi-Fi credentials in between the quotes, replacing the default values. Make sure to connect to a 2.4GHz network since 5GHz is not supported by the hardware.
 
-3) [Run the device provisioning script](https://edukit.workshop.aws/en/blinky-hello-world/device-provisioning.html). Complete the entire page, don't close the PlatformIO CLI terminal window. If you do, you can just re-run the script in another PlatformIO CLI terminal window.
+3) [Create an IAM user with the necessary policy, download, install, and configure the AWS CLI](https://edukit.workshop.aws/en/blinky-hello-world/prerequisites.html). Complete the entire page.
 
-4) After running the device provisioning script, copy the device certificate and paste it into the **include/arduino_secrets.h** file to the THING_CERTIFICATE definition. You will see the device certificate below the **TNG Device Certificate:** section, after the serial number (with "sn" prefix) as in the image below:
+4) Paste the just copied endpoint address into the **include/arduino_secrets.h** file for the AWS_IOT_ENDPOINT_ADDRESS definition.
+
+5) [Run the device provisioning script](https://edukit.workshop.aws/en/blinky-hello-world/device-provisioning.html). Complete the entire page, don't close the PlatformIO CLI terminal window. If you do, you can just re-run the script in another PlatformIO CLI terminal window.
+
+6) After running the device provisioning script, copy the device certificate and paste it into the **include/arduino_secrets.h** file to the THING_CERTIFICATE definition. You will see the device certificate below the **TNG Device Certificate:** section, after the serial number (with "sn" prefix) as in the image below:
 
 ![Provisioning script screenshot with device certificate](certificate_ss.png)
 
@@ -44,4 +48,4 @@ Upon resetting the device after it's been wiped, it will emit a ticking sound fr
 For examples of how to use the hardware features without any connectivity, take a look at the repository from M5Stack: https://github.com/m5stack/M5Core2/tree/master/examples/core2_for_aws/FactoryTest
 
 ## Third Party Library License Notice
-This software depends on ArduinoECCX08 and ArduinoMqttClient under LGPL-2.1. These are copy-left licenses. The libraries are not distributed within this software repository, they are imported in by the PlatformIO library manager.
+This software depends on ArduinoECCX08 and ArduinoMqttClient under LGPL-2.1. Note that these are copy-left licenses. The libraries are not distributed within this software repository, they are imported in by the PlatformIO library manager.
