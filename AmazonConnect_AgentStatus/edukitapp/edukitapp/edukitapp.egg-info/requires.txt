@@ -1,0 +1,6 @@
+aws-cdk.core==1.110.1
+aws-cdk.aws_iam==1.110.1
+aws-cdk.aws_kinesis==1.110.1
+aws-cdk.aws_dynamodb==1.110.1
+aws-cdk.aws-lambda-python==1.110.1
+aws-cdk.aws-lambda-event-sources==1.110.1
