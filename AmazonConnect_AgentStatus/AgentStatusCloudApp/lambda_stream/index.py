@@ -8,6 +8,7 @@ TABLE_NAME = os.environ['TABLE_NAME']
 dynamodb_client = boto3.client('dynamodb')
 iotdata_client = boto3.client('iot-data', region_name='eu-west-1')
 
+
 def get_record(AgentARN):
     try:
         response = dynamodb_client.query(
@@ -18,6 +19,7 @@ def get_record(AgentARN):
     except:
         return 1,'dynamodb_client'
     return 0,response
+
 
 def publish_shadow(device,record):
     
@@ -51,7 +53,9 @@ def lambda_handler(event, context):
         error,response = publish_shadow(response['Items'][0]['client_id']['S'],record)
         if error > 0:
             return { 'status' : 'ERROR:'+response }
-
-        #print(record['CurrentAgentSnapshot']['AgentStatus']['Name'])
         
+        #print(response['Items'][0]['client_id']['S'])
+        print(record['CurrentAgentSnapshot']['AgentStatus']['Name'])
+        
+
     return { 'status' : 'ok' }
