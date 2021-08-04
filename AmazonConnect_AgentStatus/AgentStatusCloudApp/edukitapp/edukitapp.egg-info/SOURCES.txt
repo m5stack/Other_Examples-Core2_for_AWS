@@ -1,7 +1,0 @@
-README.md
-setup.py
-edukitapp/edukitapp.egg-info/PKG-INFO
-edukitapp/edukitapp.egg-info/SOURCES.txt
-edukitapp/edukitapp.egg-info/dependency_links.txt
-edukitapp/edukitapp.egg-info/requires.txt
-edukitapp/edukitapp.egg-info/top_level.txt
