@@ -4,7 +4,7 @@ In this example, the [M5Stack Core2 for AWS IoT EduKit](https://aws.amazon.com/i
 When the CCP status is set to Available, the LED bars on the sides will change to green to visually represent them being available and red to show they're offline. This simple example can be expanded to utilize the display using the LVGL library and other hardware features documented in the device's [API reference](https://edukit.workshop.aws/en/api-reference/index.html). Some notable examples could be to display additional agent info on the screen, or setup for WiFi and other settings.
 
 ## Architecture
-Here is a high level diagram of how it works and the services used:
+Here is a high-level diagram of how it works and the services used:
 
 ![Amazon Connect Agent Status - workflow](docs/diagram.png)
 
@@ -15,7 +15,7 @@ A short gif of how the LEDs change color after the agent changes their status:
 
 ## Getting Started
 ### Pre-requisites
-In order to execute this example, you'll need to have your environment setup. The best way have the necessary tools to compile and install the device firmware, AWS CLI configuration setup, validate your setup, and get familiar with key concepts is to complete the two tutorials in the official AWS IoT EduKit content first, and then install the AWS Cloud Development Kit (CDK):
+In order to execute this example, you'll need to have your environment setup. The best way to have the necessary tools to compile and install the device firmware, AWS CLI configuration setup, validate your setup, and get familiar with key concepts is to complete the two tutorials in the official AWS IoT EduKit content first, and then install the AWS Cloud Development Kit (CDK):
 
 1) [Getting Started tutorial](https://edukit.workshop.aws/en/getting-started.html)
 2) [Cloud Connected Blinky tutorial](https://edukit.workshop.aws/en/blinky-hello-world.html)
@@ -39,7 +39,7 @@ cd Agent_Status-Cloud_App
 pip -r requirements.txt
 ```
 
-Lastly you'll synthesize your CloudFormation template from the scripts and deploy the stack to your AWS account in the region specified in your AWS CLI configuration.
+Lastly, you'll synthesize your CloudFormation template from the scripts and deploy the stack to your AWS account in the region specified in your AWS CLI configuration.
 ```bash
 cdk synth
 cdk deploy
