@@ -31,6 +31,8 @@ pio run -e core2foraws -t menuconfig
 Go to **AWS IoT EduKit Configuration** to then enter your SSID and password. Note that your network must be a 2.4GHz network.
 
 ### Create and deploy the AWS CloudFormation template
+The small serverless application uses [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/). This is a framework for defining cloud infrastructure using code and provisioning it through AWS CloudFormation. The AWS CDK lets you define applications in the AWS Cloud using your programming language of choice. Please visit this [getting started guide](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html) to learn more about AWS CDK.
+
 In order to synthesize the CloudFormation template and deploy it to your AWS account, you'll need to first install all the necessary dependencies. First, go to the `Agent_Status-Cloud_App` directory and then use pip to install the Python 3.x dependencies:
 ```bash
 cd Agent_Status-Cloud_App
