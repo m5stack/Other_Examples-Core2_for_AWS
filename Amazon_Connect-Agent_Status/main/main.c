@@ -313,6 +313,6 @@ void app_main()
     ui_init();
     initialise_wifi();
 
-    xTaskCreatePinnedToCore(&aws_iot_task, "aws_iot_task", 4096 * 4, NULL, 1, NULL, 1);
+    xTaskCreatePinnedToCore(&aws_iot_task, "aws_iot_task", 4096 * 3, NULL, 5, NULL, 1);
 
 }

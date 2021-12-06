@@ -1,9 +1,9 @@
 /*
- * Core2 for AWS IoT EduKit
- * Earth Unit Moisture Sensor Example v1.0.0
+ * AWS IoT EduKit - Core2 for AWS IoT EduKit
+ * Cloud Connected M5Stack Earth Moisture Sensor v1.0.1
  * main.c
  * 
- * Copyright 2010-2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2010-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * Additions Copyright 2016 Espressif Systems (Shanghai) PTE LTD
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -57,9 +57,6 @@
 /* The time prefix used by the logger. */
 static const char *TAG = "MAIN";
 
-/* The FreeRTOS task handler for the blink task that can be used to control the task later */
-TaskHandle_t xBlink;
-
 /* CA Root certificate */
 extern const uint8_t aws_root_ca_pem_start[] asm("_binary_aws_root_ca_pem_start");
 extern const uint8_t aws_root_ca_pem_end[] asm("_binary_aws_root_ca_pem_end");
@@ -98,12 +95,76 @@ void disconnect_callback_handler(AWS_IoT_Client *pClient, void *data) {
     }
 }
 
+/**
+ * @brief Function that reads from sensor and publishes to MQTT topic.
+ *
+ * This function is called by the aws_iot_task at the interval defined by 
+ * @ref PUBLISH_INTERVAL_MS. 
+ * 
+ * The function reads from the connected M5Stack
+ * Earth moisture sensor on Port B, and gets the calibrated millivolt 
+ * value. It then uses the cJSON library to create a JSON object, which
+ * then gets stringified to be sent as an MQTT message.
+ * 
+ * The sensor value is published to a topic that ends with "sensor." So
+ * the complete MQTT topic should look like `0123456A78B9012C34/sensor`
+ * with the serial number that matches your device's actual serial
+ * number, and as registered with AWS IoT.
+ * 
+ * It also displays the sensor readings on to the screen, frees the
+ * memory used by cJSON to construct the JSON payload, and lastly
+ * it displays different colors on the RGB LED bars to indicate if
+ * the soil is moist or dry.
+ *
+*/
 static void publisher(AWS_IoT_Client *client, char *base_topic, uint16_t base_topic_len){
+    // AWS IoT publishing struct configured for QOS0
     IoT_Publish_Message_Params paramsQOS0;
     paramsQOS0.qos = QOS0;
     paramsQOS0.isRetained = 0;
     
+    // Read the sensor value from the ADC
     int moisture_millis = Core2ForAWS_Port_B_ADC_ReadMilliVolts();
+
+    // Create a JSON object using the cJSON library
+    // JSON object has keys `moisture_sensor`, a string for the 
+    // sensor type, and `moisture_level`, a number, for the sensor 
+    // readings.
+    cJSON *payload = cJSON_CreateObject();
+    cJSON *moisture_sensor = cJSON_CreateString("M5Stack_Earth");
+    cJSON *moisture_level = cJSON_CreateNumber(moisture_millis);
+    cJSON_AddItemToObject(payload, "moisture_sensor", moisture_sensor);
+    cJSON_AddItemToObject(payload, "moisture_level", moisture_level);
+
+    // Stringify the JSON object to be sent over MQTT
+    // Add the string to the QOS0 payload
+    const char *JSONPayload = cJSON_Print(payload);
+    paramsQOS0.payload = (void *) JSONPayload;
+    paramsQOS0.payloadLen = strlen(JSONPayload);
+
+    // As a best practice, narrow the topic to be more easily digested
+    // Here we append "sensor" to the base topic name.
+    char *mqtt_pub_topic = "sensor";
+    uint8_t mqtt_pub_topic_len = strlen( mqtt_pub_topic );
+    uint8_t publish_topic_len = base_topic_len + mqtt_pub_topic_len;
+    char publish_topic[ publish_topic_len ];
+    snprintf( publish_topic, publish_topic_len, "%s%s", base_topic, mqtt_pub_topic );
+
+    // Publish the message to AWS IoT with the topic specified above
+    IoT_Error_t rc = aws_iot_mqtt_publish(client, publish_topic, publish_topic_len, &paramsQOS0);
+    if (rc != SUCCESS){
+        ESP_LOGE(TAG, "Publish QOS0 error %i", rc);
+        rc = SUCCESS;
+    }
+
+    // Print the payload string to the screen
+    ui_textarea_add("%s", (char *)JSONPayload, paramsQOS0.payloadLen);
+
+    // Delete the JSON object and free dynamically allocated memory
+    // This is critical to avoid a memory leak
+    cJSON_Delete(payload);
+
+    // Change the color of the LEDS based on sensor mv value
     if(moisture_millis < 2700){ 
         Core2ForAWS_Sk6812_SetSideColor(SK6812_SIDE_LEFT, 0x00ff00);
         Core2ForAWS_Sk6812_SetSideColor(SK6812_SIDE_RIGHT, 0x00ff00);
@@ -114,27 +175,6 @@ static void publisher(AWS_IoT_Client *client, char *base_topic, uint16_t base_to
         Core2ForAWS_Sk6812_SetSideColor(SK6812_SIDE_RIGHT, 0xff0000);
         Core2ForAWS_Sk6812_Show();
     }
-    cJSON *payload = cJSON_CreateObject();
-    cJSON *moisture_sensor = cJSON_CreateString("M5Stack_Earth");
-    cJSON *moisture_level = cJSON_CreateNumber(moisture_millis);
-    cJSON_AddItemToObject(payload, "moisture_sensor", moisture_sensor);
-    cJSON_AddItemToObject(payload, "moisture_level", moisture_level);
-
-    const char *JSONPayload = cJSON_Print(payload);
-    // paramsQOS0.payload = (void *) JSONPayload;
-    // paramsQOS0.payloadLen = strlen(JSONPayload);
-
-    const char *payloadstr = "[{'dataName':\"data\",\"value\":879710208,\"devicetime\":1464655432232}, {\"dataName\":\"data\",\"value\":879710208,\"devicetime\":1464655432232}]";
-    paramsQOS0.payload = (void *)payloadstr;
-    paramsQOS0.payloadLen = strlen(payloadstr);
-
-    IoT_Error_t rc = aws_iot_mqtt_publish(client, base_topic, base_topic_len, &paramsQOS0);
-    if (rc != SUCCESS){
-        ESP_LOGE(TAG, "Publish QOS0 error %i", rc);
-        rc = SUCCESS;
-    }
-    ui_textarea_add("%s", (char *)JSONPayload, paramsQOS0.payloadLen);
-    cJSON_Delete(payload);
 }
 
 void aws_iot_task(void *param) {
@@ -204,6 +244,7 @@ void aws_iot_task(void *param) {
     } while(SUCCESS != rc);
     ui_textarea_add("Successfully connected!\n", NULL, 0);
     ESP_LOGI(TAG, "Successfully connected to AWS IoT Core!");
+
     /*
      * Enable Auto Reconnect functionality. Minimum and Maximum time for exponential backoff for retries.
      *  #AWS_IOT_MQTT_MIN_RECONNECT_WAIT_INTERVAL
@@ -230,7 +271,7 @@ void aws_iot_task(void *param) {
     ESP_LOGI(TAG, "\n****************************************\n*  AWS client Id - %s  *\n****************************************\n\n",
              client_id);
     
-    ui_textarea_add("Attempting publish to: %s\n", base_publish_topic, BASE_PUBLISH_TOPIC_LEN) ;
+    ui_textarea_add("Publishing to topic: %s\n", base_publish_topic, BASE_PUBLISH_TOPIC_LEN) ;
     while((NETWORK_ATTEMPTING_RECONNECT == rc || NETWORK_RECONNECTED == rc || SUCCESS == rc)) {
 
         //Max time the yield function will wait for read messages
@@ -256,8 +297,8 @@ void app_main()
     Core2ForAWS_Display_SetBrightness(80);
     Core2ForAWS_Port_PinMode(PORT_B_ADC_PIN, ADC);
     
-    initialise_wifi();
     ui_init();
+    initialise_wifi();
 
-    xTaskCreatePinnedToCore(&aws_iot_task, "aws_iot_task", 4096 * 2, NULL, 5, NULL, 1);
+    xTaskCreatePinnedToCore( &aws_iot_task, "aws_iot_task", 4096 * 2, NULL, 5, NULL, 1 );
 }

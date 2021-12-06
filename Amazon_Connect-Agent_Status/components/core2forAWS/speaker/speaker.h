@@ -7,7 +7,10 @@
 #include "stdint.h"
 
 /**
- * @brief Initializes the speaker over I2S.
+ * @brief Initializes the speaker over I2S. The I2S bus is initialized
+ * for output with a sample rate of 44100Hz, with a 16-bit depth, and 
+ * right channel audio. Other configurations requires using the 
+ * ESP-IDF I2S driver directly.
  * 
  * @note You must enable the speaker after initializing it with @ref Core2ForAWS_Speaker_Enable().
  * The speaker cannot be initialized at the same time
@@ -15,9 +18,11 @@
  * Attempting to enable or use both at the same time will 
  * cause the device to hard fault.
  * 
+ * @return [esp_err_t](https://docs.espressif.com/projects/esp-idf/en/release-v4.2/esp32/api-reference/system/esp_err.html#macros). 0 or `ESP_OK` if successful.
+ * 
  */
 /* @[declare_speaker_init] */
-void Speaker_Init();
+esp_err_t Speaker_Init();
 /* @[declare_speaker_init] */
 
 /**
@@ -45,14 +50,18 @@ void Speaker_Init();
  * @param[out] buff The sound buffer to play.
  * @param[in] len Length of the buffer.
  * @param[in] timeout UNUSED.
+ *
+ * @return [esp_err_t](https://docs.espressif.com/projects/esp-idf/en/release-v4.2/esp32/api-reference/system/esp_err.html#macros). 0 or `ESP_OK` if successful.
  */
 /* @[declare_speaker_writebuff] */
-void Speaker_WriteBuff(uint8_t* buff, uint32_t len, uint32_t timeout);
+esp_err_t Speaker_WriteBuff(uint8_t* buff, uint32_t len, uint32_t timeout);
 /* @[declare_speaker_writebuff] */
 
 /**
  * @brief De-initializes the speaker.
+ * 
+ * @return [esp_err_t](https://docs.espressif.com/projects/esp-idf/en/release-v4.2/esp32/api-reference/system/esp_err.html#macros). 0 or `ESP_OK` if successful.
  */
 /* @[declare_speaker_deinit] */
-void Speaker_Deinit();
+esp_err_t Speaker_Deinit();
 /* @[declare_speaker_deinit] */

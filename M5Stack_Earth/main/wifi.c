@@ -1,6 +1,6 @@
 /*
- * Core2 for AWS IoT EduKit
- * Earth Unit Moisture Sensor Example v1.0.0
+ * AWS IoT EduKit - Core2 for AWS IoT EduKit
+ * Cloud Connected M5Stack Earth Moisture Sensor v1.0.1
  * wifi.c
  * 
  * Copyright 2010-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
