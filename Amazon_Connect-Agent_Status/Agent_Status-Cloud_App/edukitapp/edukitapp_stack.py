@@ -1,5 +1,6 @@
 from aws_cdk import (
     aws_iam as iam,
+    aws_kms as kms,
     aws_kinesis as kinesis,
     aws_dynamodb as dynamodb,
     aws_lambda_python as aws_lambda_python,
@@ -14,7 +15,8 @@ class EdukitappStack(core.Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         edukitapp_stream = kinesis.Stream(self, "EdukitAgentStream",
-            stream_name="edukit-agent-stream"
+            stream_name="edukit-agent-stream",
+            encryption=kinesis.StreamEncryption.KMS
         )
         
         edukitapp_table = dynamodb.Table(self, "edukit-agent-stream-table",
