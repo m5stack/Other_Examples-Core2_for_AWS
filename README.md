@@ -1,9 +1,9 @@
-## AWS IoT EduKit Code Examples
+## AWS IoT EduKit Unsupported Code Examples
 
 This repository contains code examples that work exclusively with the M5Stack Core2 ESP32 IoT Development Kit for AWS IoT EduKit available on [Amazon.com](https://www.amazon.com/dp/B08VGRZYJR) or on the [M5Stack store](https://m5stack.com/products/m5stack-core2-esp32-iot-development-kit-for-aws-iot-edukit).. These are _not_ the code examples used in the program's content. For those examples, please see the repository at: [https://github.com/m5stack/Core2-for-AWS-IoT-EduKit](https://github.com/m5stack/Core2-for-AWS-IoT-EduKit). Examples contained in this repository are not regularly maintained and tested like the official tutorial examples are.
 
 ## Current examples
-* Basic Arduino project in PlatformIO
+* AWS Connect example showing agent status/presence using the Core2 for AWS features (LED bars)
 * M5Stack Earth moisture sensor collection to AWS IoT (via ADC readings)
 
 ## Security
