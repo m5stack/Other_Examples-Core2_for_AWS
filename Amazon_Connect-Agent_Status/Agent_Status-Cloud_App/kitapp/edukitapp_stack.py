@@ -9,26 +9,26 @@ from aws_cdk import (
     core
 )
 
-class EdukitappStack(core.Stack):
+class kitappStack(core.Stack):
 
     def __init__(self, scope: core.Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        edukitapp_stream = kinesis.Stream(self, "EdukitAgentStream",
-            stream_name="edukit-agent-stream",
+        kitapp_stream = kinesis.Stream(self, "KitAgentStream",
+            stream_name="kit-agent-stream",
             encryption=kinesis.StreamEncryption.KMS
         )
         
-        edukitapp_table = dynamodb.Table(self, "edukit-agent-stream-table",
+        kitapp_table = dynamodb.Table(self, "kit-agent-stream-table",
             partition_key=dynamodb.Attribute(name="AgentARN", type=dynamodb.AttributeType.STRING)
         )
 
-        edukitapp_lambda_role = iam.Role(
-            self,"edukitapp_lambda_role",
+        kitapp_lambda_role = iam.Role(
+            self,"kitapp_lambda_role",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com")
         )
         
-        edukitapp_lambda_role.add_to_policy(iam.PolicyStatement(
+        kitapp_lambda_role.add_to_policy(iam.PolicyStatement(
             resources=["*"],
             actions=[
                 "logs:CreateLogGroup",
@@ -37,7 +37,7 @@ class EdukitappStack(core.Stack):
             ]
         ))
 
-        edukitapp_lambda_role.add_to_policy(iam.PolicyStatement(
+        kitapp_lambda_role.add_to_policy(iam.PolicyStatement(
             resources=["*"],
             actions=[
                 "iot:UpdateThingShadow"
@@ -45,7 +45,7 @@ class EdukitappStack(core.Stack):
         ))
 
 
-        edukitapp_lambda = aws_lambda_python.PythonFunction(
+        kitapp_lambda = aws_lambda_python.PythonFunction(
             self,
             "lambdahandler",
             entry="lambda_stream",
@@ -54,17 +54,17 @@ class EdukitappStack(core.Stack):
             memory_size=512,
             timeout=core.Duration.minutes(1),
             runtime=_lambda.Runtime.PYTHON_3_8,
-            role=edukitapp_lambda_role,
+            role=kitapp_lambda_role,
             environment={
-                'TABLE_NAME': edukitapp_table.table_name
+                'TABLE_NAME': kitapp_table.table_name
             }
         )
 
-        edukitapp_lambda.add_event_source(_lambda_event_sources.KinesisEventSource(edukitapp_stream,
+        kitapp_lambda.add_event_source(_lambda_event_sources.KinesisEventSource(kitapp_stream,
             starting_position=_lambda.StartingPosition.TRIM_HORIZON
         ))
 
-        edukitapp_table.grant_read_write_data(edukitapp_lambda)
+        kitapp_table.grant_read_write_data(kitapp_lambda)
 
 
         

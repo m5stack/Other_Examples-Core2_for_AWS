@@ -1,0 +1,7 @@
+README.md
+setup.py
+kitapp/kitapp.egg-info/PKG-INFO
+kitapp/kitapp.egg-info/SOURCES.txt
+kitapp/kitapp.egg-info/dependency_links.txt
+kitapp/kitapp.egg-info/requires.txt
+kitapp/kitapp.egg-info/top_level.txt

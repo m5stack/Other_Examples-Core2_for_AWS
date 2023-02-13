@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := AWS_IoT_EduKit-AmazonConnect_AgentStatus
+PROJECT_NAME := AWS_IoT_Kit-AmazonConnect_AgentStatus
 PROJECT_VER := 1.2.1
 
 include $(IDF_PATH)/make/project.mk

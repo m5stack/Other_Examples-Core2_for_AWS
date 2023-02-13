@@ -4,4 +4,4 @@ cmake_minimum_required(VERSION 3.5)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-project(AWS_IoT_EduKit-Moisure_Sensor VERSION 1.0.1)
+project(AWS_IoT_Kit-Moisure_Sensor VERSION 1.0.1)
