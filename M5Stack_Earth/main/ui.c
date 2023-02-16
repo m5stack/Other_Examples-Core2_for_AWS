@@ -1,5 +1,5 @@
 /*
- * AWS IoT EduKit - Core2 for AWS IoT EduKit
+ * AWS IoT Kit - Core2 for AWS IoT Kit
  * Cloud Connected M5Stack Earth Moisture Sensor v1.0.1
  * ui.c
  * 

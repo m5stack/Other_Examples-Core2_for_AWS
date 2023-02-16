@@ -29,7 +29,7 @@ FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ------
 
 ** Core2forAWS; version 1 --
-https://github.com/m5stack/Core2-for-AWS-IoT-EduKit
+https://github.com/m5stack/Core2-for-AWS-IoT-Kit
 Copyright (c) 2020 LVGL LLC
 Copyright (c) 2018 LoBo (https://github.com/loboris)
 Copyright (c) 2020 Amazon Web Services

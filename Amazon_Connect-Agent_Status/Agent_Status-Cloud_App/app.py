@@ -2,11 +2,11 @@
 
 from aws_cdk import core
 
-from edukitapp.edukitapp_stack import EdukitappStack
+from kitapp.kitapp_stack import KitappStack
 
 env_LON = core.Environment(region="eu-west-2")
 
 app = core.App()
-EdukitappStack(app, "edukitapp", env=env_LON)
+KitappStack(app, "kitapp", env=env_LON)
 
 app.synth()
