@@ -1,4 +1,4 @@
-# Moisture Sensor Example for Core2 for AWS IoT EduKit
-This is an example project for reading from the ADC pin and GPIO off the connected M5Stack Earth Unit sensor that's attached to Port B of the M5Stack Core2 for AWS IoT EduKit. It then takes the reading data, creates a JSON object, which gets serialized to be sent to AWS IoT as an MQTT message. This code is made to work exclusively with the M5Stack Core2 ESP32 IoT Development Kit for AWS IoT EduKit available on [Amazon.com](https://www.amazon.com/dp/B08VGRZYJR) or on the [M5Stack store](https://m5stack.com/products/m5stack-core2-esp32-iot-development-kit-for-aws-iot-edukit).
+# Moisture Sensor Example for Core2 for AWS IoT Kit
+This is an example project for reading from the ADC pin and GPIO off the connected M5Stack Earth Unit sensor that's attached to Port B of the M5Stack Core2 for AWS IoT Kit. It then takes the reading data, creates a JSON object, which gets serialized to be sent to AWS IoT as an MQTT message. This code is made to work exclusively with the M5Stack Core2 ESP32 IoT Development Kit for AWS IoT Kit available on [Amazon.com](https://www.amazon.com/dp/B08VGRZYJR) or on the [M5Stack store](https://m5stack.com/products/m5stack-core2-esp32-iot-development-kit-for-aws-iot-kit).
 
-To find out more about the AWS IoT EduKit program, visit [https://aws.amazon.com/iot/edukit](https://aws.amazon.com/iot/edukit).
+To find out more about the AWS IoT Kit program, visit [https://aws-iot-kit-docs.m5stack.com/en/](https://aws-iot-kit-docs.m5stack.com/en/).
